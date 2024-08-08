@@ -22,12 +22,12 @@
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
   <!-- This will be custom per chart -->
-  <script src="./static/js/app.js"></script>
-
+  <!-- <script src="./static/js/app.js"></script> -->
+  <link rel="stylesheet" href="./static/css/static.css">
 </head>
 <body>
   <div id="chart"></div>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-priary" data-bs-theme="dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Meteorite Landings</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@
             <a class="nav-link" href="#">Map</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Graph</a>
+            <a class="nav-link" href="/graph">Graph</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/workscited">Works Cited</a>
@@ -67,7 +67,8 @@
   <!-- D3 JavaScript -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <!-- Our JavaScript -->
-  <script type="text/javascript" src="static/js/{{chart_js}}"></script>
+  <!--<script type="text/javascript" src="static/js/{{chart_js}}"></script>-->
+  {% block script %} {% endblock %}
 </body>
 
 </html>
