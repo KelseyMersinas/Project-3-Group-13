@@ -1,7 +1,23 @@
 {% extends 'base.html' %} {% block content %}
 <h1>Graphs</h1>
 <!--Any other HTML goes here inbetween block and endblock-->
+<head>
+<title>Bellybutton Biodiversity</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 p-5 text-center bg-light">
+        <h1>Meteorite Landings Over Time</h1>
+        <p>Use the charts below to explore the dataset</p>
+        </div>
+    </div>
+    <br>
 <div id="graph"></div>
+</body>
 {% endblock %} {% block script %}
+<!-- Include Plotly.js from CDN -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript" src="static/js/graph.js"></script>
 {% endblock %}
