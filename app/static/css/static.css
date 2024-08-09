@@ -6,9 +6,6 @@ body {
 .content {
     padding: 24px;
 }
-#map-container {
-    height: 800px;
-}
 
 #map {
     height: 640px;

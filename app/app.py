@@ -30,6 +30,10 @@ def workscited():
 def aboutus():
     return render_template('aboutus.html')
 
+@app.route('/map', methods=['GET'])
+def map():
+    return render_template('map.html')
+
 @app.route('/api/v1/data', methods=['GET'])
 def get_data():
     session = db_session()
@@ -48,12 +52,25 @@ def get_data():
 @app.route("/<chart_name>")
 def main_handler(chart_name):
     js_targets = {
-        "mass_distribution": "heatmap_mass_distribution.js"
+        "mass_distribution": "heatmap_mass_distribution.js",
+        "map": "map.js"
     }
     return render_template("index.html", chart_js=js_targets.get(chart_name, "noop.js"))
 
 @app.route("/api/v1/mass_distribution")
 def mass_distribution_api():
+    session = db_session()
+    data = session.query(MeteoriteLanding.id, MeteoriteLanding.mass, MeteoriteLanding.lat, MeteoriteLanding.long).all()
+    session.remove()  # Ensure the session is removed when done
+    return jsonify([{
+        "id": row.id,
+        "mass": row.mass,
+        "lat": row.lat,
+        "long": row.long
+    } for row in data])
+
+@app.route("/api/v1/map")
+def map_api():
     session = db_session()
     data = session.query(MeteoriteLanding.id, MeteoriteLanding.mass, MeteoriteLanding.lat, MeteoriteLanding.long).all()
     session.remove()  # Ensure the session is removed when done
