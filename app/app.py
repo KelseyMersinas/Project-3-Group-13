@@ -1,4 +1,5 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify
+from sqlalchemy import func
 from sqlHelper import init_db, MeteoriteLanding
 
 app = Flask(__name__)
@@ -47,6 +48,28 @@ def get_data():
         "lat": row.lat,
         "long": row.long,
         "GeoLocation": row.GeoLocation
+    } for row in data])
+
+# Marty use this route for your bar graph data
+# you can go to http://localhost:5000//api/v1/count/1970 to check it out
+@app.route('/api/v1/count/<after>', methods=['GET'])
+def get_data_after(after):
+    session = db_session()
+    query = session.query(
+        MeteoriteLanding.year,
+        func.count(MeteoriteLanding.id).label('count')
+    ).filter(
+        MeteoriteLanding.year > after
+    ).group_by(
+        MeteoriteLanding.year
+    ).order_by(
+        MeteoriteLanding.year
+    )
+    data = query.all()
+    db_session.remove()  # Ensure the session is removed when done
+    return jsonify([{
+        "year": row.year,
+        "count": row.count,
     } for row in data])
 
 @app.route("/<chart_name>")

@@ -1,22 +1,52 @@
 console.log("graph here");
+// globals
+const currentYear = new Date().getFullYear();
+let chartData;
+
 function init() {
   fetch("/api/v1/data")
     .then((response) => response.json())
     .then((data) => {
       // hre do stuff
       console.log(data);
-      buildChart(data);
+      // save data as a global variable for data
+      chartData = data
+      // determine last 50 years
+      const startYear = currentYear - 200;
+      // set input bounds
+      setInputBounds(startYear, currentYear);
+      buildChart(data, startYear, currentYear);
     })
     .catch((error) => console.error(error));
 }
 
 init();
 
-function buildChart(data) {
-    // determine last 50 years
-    const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 50;
+function setInputBounds(min, max) {
+    const input = document.querySelector("#year-select");
+    input.max = max;
+    input.min = min;
+    input.value = min;
+    // start with disabled as data can't be reached until page loads
+    input.removeAttribute('disabled');
+    setInputLabel(min);
+}
 
+function setInputLabel(year) {
+    const label = document.querySelector("#starting-label");
+    label.innerHTML = `Starting Year: ${year}`;
+}
+
+function handleSliderChange(event) {
+    const { target } = event;
+    const { value } = target;
+    // set label
+    setInputLabel(value);
+    // build the chart again based on selectors
+    buildChart(chartData, value, currentYear);
+}
+
+function buildChart(data, startYear, currentYear) {
     // Filter data to include only the last 50 years
     const filteredData = data.filter((landing) => {
         return landing.year >= startYear && landing.year <= currentYear;
@@ -63,7 +93,7 @@ function buildChart(data) {
         type: "line",
         name: "Northern Hemisphere",
         marker: {
-            color: "rgba(67,67,67,1)"
+            color: "rgb(255, 217, 102)"
         }
     }, {
         x: uniqueYears,
@@ -71,7 +101,7 @@ function buildChart(data) {
         type: "line",
         name: "Southern Hemisphere",
         marker: {
-            color: "rgba(115,115,115,1)"
+            color: "rgb(234, 153, 153)"
         }
     }], {
         title: "Meteorite Landings per Year by Hemisphere",

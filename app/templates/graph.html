@@ -7,17 +7,26 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-md-12 p-5 text-center bg-light">
         <h1>Meteorite Landings Over Time</h1>
         <p>Use the charts below to explore the dataset</p>
         </div>
     </div>
-    <br>
-<div id="graph"></div>
+  </div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2 p-3 bg-light">
+      <h2 class="fs-4 text-center">Controls</h2>
+      <label id="starting-label" for="year-select" class="form-label">Fetching data...</label>
+      <input type="range" disabled onchange="handleSliderChange(event);" class="form-range" id="year-select">
+    </div>
+    <div class="col-md-10">
+      <div id="graph"></div>
+    </div>
+  </div>
+</div>
 </body>
 {% endblock %} {% block script %}
-<!-- Include Plotly.js from CDN -->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript" src="static/js/graph.js"></script>
 {% endblock %}
