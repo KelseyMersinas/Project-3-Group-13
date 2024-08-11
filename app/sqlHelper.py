@@ -8,6 +8,7 @@ class MeteoriteLanding(Base):
     id = Column(BigInteger, primary_key=True)
     name = Column(String, nullable=False)
     mass = Column(Float, nullable=False)
+    recclass = Column(String, nullable=False)
     year = Column(Float, nullable=False)  # Consider changing to Integer if appropriate
     lat = Column(Float, nullable=False)
     long = Column(Float, nullable=False)
