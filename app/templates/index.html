@@ -1,6 +1,28 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<h1 style="margin: 10px; padding: 10px" class="align-items-center">
+  Meteorite Landings:
+</h1>
+<div class="container">
+  <div style="margin: 10px; padding: 15px" class="row align-items-center">
+    <h3>A Meteorical Society data set on over 45,000 fallen meteorites</h3>
+  </div>
+  <div>
+    <p class="row align-items-justified mb-2">
+      Thousands of meteorites fall each year, most breaking up in our
+      atmosphere. Our project aims to bring together a comprehensive dataset of
+      meteorite landings from around the world. By analyzing this data, we seek
+      to uncover patterns and insights about these phenomenon.
+    </p>
+    <img
+      src="https://static.scientificamerican.com/sciam/cache/file/2ECDAE9E-36E8-49A1-96AEA9BD5CFF4908_source.jpg?w=1200"
+      alt="Falling Meteore"
+      width="700"
+      height="500"
+      style="margin: 40px; padding: 15px"
+      title="Falling Meteore"
+    />
+  </div>
+</div>
+<!--Any other HTML goes here inbetween block and endblock-->
 
-{% block content %}
-    <h1>Home</h1>
-    <!--Any other HTML goes here inbetween block and endblock-->
 {% endblock %}

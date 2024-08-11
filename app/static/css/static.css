@@ -1,21 +1,33 @@
 body {
-    background-color: rgb(125, 142, 236); 
-    background-image: none;
+  /* background-color: rgb(125, 142, 236);  */
+  background-image: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Sofia Sans", sans-serif;
+}
+
+p {
+    font-family: 'Inter', sans-serif;
 }
 
 .content {
-    padding: 24px;
+  padding: 24px;
 }
 
 #map {
-    height: 640px;
-
+  height: 640px;
 }
 
 .info {
-    background-color: white;
-    color:black;
-    padding: 1em;
-    border: 1.5px solid #000;
-    border-radius: 0.3em;
-  }
+  background-color: white;
+  color: black;
+  padding: 1em;
+  border: 1.5px solid #000;
+  border-radius: 0.3em;
+}

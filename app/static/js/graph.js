@@ -1,5 +1,6 @@
 // globals
-const currentYear = new Date().getFullYear();
+//const currentYear = new Date().getFullYear();
+const currentYear = 2016
 let chartData;
 
 function init() {
@@ -11,7 +12,7 @@ function init() {
       // save data as a global variable for data
       chartData = data;
       // determine last 150 years for line graph
-      const startYear = currentYear - 150;
+      const startYear = currentYear - 60;
       // set input bounds
       setInputBounds(startYear, currentYear);
       const {min, max} = getFirstAndLastYear(data);
@@ -45,7 +46,7 @@ function getFirstAndLastYear(data) {
 function setInputBounds(min, max) {
   const input = document.querySelector("#year-select");
   input.max = max;
-  input.min = min;
+  input.min = 1956;
   input.value = min;
   // start with disabled as data can't be reached until page loads
   input.removeAttribute("disabled");

@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>About Us</h1>
+    <h1>Who we are</h1>
     <!--Any other HTML goes here inbetween block and endblock-->
-    <h2>Who we are</h2>
-    <p>Zachary Dallas, Kelsey Mersinas, Kade Rivers, Marty Thompson</p>
-    
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-2">
+                <p>Click to check out our Githubs</p>
+            </div>
+            <div class="col-md-10">
+                <div class="list-group">
+                    <a target="_blank" href="https://github.com/MoonSplosion" class="list-group-item list-group-item-primary list-group-item-action">Zachary Dallas</a> 
+                    <a target="_blank" href="https://github.com/KelseyMersinas" class="list-group-item list-group-item-primary list-group-item-action">Kelsey Mersinas</a>
+                    <a target="_blank" href="https://github.com/musicmaj" class="list-group-item list-group-item-primary list-group-item-action">Kade Rivers</a>
+                    <a target="_blank" href="https://github.com/martyet2" class="list-group-item list-group-item-primary list-group-item-action">Marty Thompson</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
