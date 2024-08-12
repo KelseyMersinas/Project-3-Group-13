@@ -209,6 +209,11 @@ function buildBarChart(data, startYear, endingYear) {
   //just take the top 10
   const topTenByMass = filteredByYear.slice(0, 10);
 
+  // Set up hover data for bar chart
+  const hoverText = topTenByMass.map(chartData => {
+    return `Year: ${chartData.year}<br>RecClass: ${chartData.recclass}<br>GeoLocation: ${chartData.GeoLocation}`;
+  });
+
   // set up layout and data for bar chart
   const barData = [
     {
@@ -222,6 +227,8 @@ function buildBarChart(data, startYear, endingYear) {
       marker: {
         color: "skyblue",
       },
+      text: hoverText,
+      hoverInfo: "text",
     },
   ];
   const layout = {
