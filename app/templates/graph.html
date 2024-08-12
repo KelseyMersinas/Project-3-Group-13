@@ -1,11 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 <h1>Graphs</h1>
 <!--Any other HTML goes here inbetween block and endblock-->
-<!-- <head>
-<title>Bellybutton Biodiversity</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head> -->
-
 <div class="container">
     <div class="row mb-5">
         <div class="col-md-12 p-5 text-center bg-dark">
@@ -16,23 +11,20 @@
   </div>
 <div class="container">
   <div class="row">
-    <div class="col-md-2 p-3 bg-dark">
+    <div class="col-md-3 p-3 bg-dark">
       <h2 class="fs-4 text-center">Controls</h2>
       <label id="starting-label" for="year-select" class="form-label">Fetching data...</label>
       <input type="range" disabled onchange="handleSliderChange(event);" class="form-range" id="year-select">
+      <label id="ending-label" for="ending-year-select" class="form-label">Fetching data...</label>
+      <input type="range" disabled onchange="handleEndingSliderChange(event);" class="form-range" id="ending-year-select">
     </div>
-    <div class="col-md-10">
+    <div class="col-md-9">
       <div id="line-graph"></div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-2 p-3 bg-dark">
-      <!-- <h2 class="fs-4 text-center">Controls</h2> -->
-      <!-- <label id="choose-label" for="choose-year" class="form-label">Fetching data...</label>
-      <input type="number" disabled step="1" class="form-control" id="choose-year"> 
-      <input type="submit"> -->
-    </div>
-    <div class="col-md-10">
+    <div class="col-md-3 p-3 bg-dark"></div>
+    <div class="col-md-9">
       <div id="bar-graph"></div>
     </div>
   </div>

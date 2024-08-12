@@ -1,56 +1,56 @@
 // globals
-//const currentYear = new Date().getFullYear();
-const currentYear = 2016
+const MAX_YEAR = 2016;
+const MIN_YEAR = 1950;
+let endingYear = MAX_YEAR;
+let startYear = MIN_YEAR;
 let chartData;
 
 function init() {
   fetch("/api/v1/data")
     .then((response) => response.json())
     .then((data) => {
-      // check data is loading correctly 
+      // check data is loading correctly
       console.log(data);
       // save data as a global variable for data
       chartData = data;
-      // determine last 150 years for line graph
-      const startYear = currentYear - 60;
       // set input bounds
-      setInputBounds(startYear, currentYear);
-      const {min, max} = getFirstAndLastYear(data);
-      console.log({min, max})
-      setInputYear(min, max);
-      buildLineGraph(data, startYear, currentYear);
-      //buildBarChart(data);
+      setInputBounds(startYear, endingYear, true);
+      setEndingInputBounds(startYear, endingYear, true);
+      setInputLabel(startYear);
+      setEndingInputLabel(endingYear);
+      // build graphs
+      buildLineGraph(data, startYear, endingYear);
+      buildBarChart(data, startYear, endingYear);
     })
     .catch((error) => console.error(error));
 }
 
 init();
 
-//
-function getFirstAndLastYear(data) {
-  return data.reduce((accumulator, landing) => {
-    const year = landing.year;
-    const max = accumulator.max;
-    const min = accumulator.min;
-    if (min === undefined || year < min) {
-      return { min: year, max };
-    }
-    if (max === undefined || year > max) {
-      return { min, max: year };
-    }
-    return { min, max };
-  }, {});
+// function for slider bar
+function setInputBounds(min, max, setValue = false) {
+  const input = document.querySelector("#year-select");
+  input.max = max;
+  input.min = MIN_YEAR;
+  if (setValue) {
+    input.value = min;
+    setInputLabel(min);
+  } 
+  // start with disabled as data can't be reached until page loads
+  input.removeAttribute("disabled");
 }
 
 // function for slider bar
-function setInputBounds(min, max) {
-  const input = document.querySelector("#year-select");
-  input.max = max;
-  input.min = 1956;
-  input.value = min;
+function setEndingInputBounds(min, max, setValue = false) {
+  const input = document.querySelector("#ending-year-select");
+  input.max = MAX_YEAR;
+  input.min = min;
+  if (setValue) {
+    input.value = max;
+    setInputLabel(max);
+  }
   // start with disabled as data can't be reached until page loads
   input.removeAttribute("disabled");
-  setInputLabel(min);
 }
 
 // function for label for slider bar
@@ -59,21 +59,43 @@ function setInputLabel(year) {
   label.innerHTML = `Starting Year: ${year}`;
 }
 
+// function for label for slider bar
+function setEndingInputLabel(year) {
+  const label = document.querySelector("#ending-label");
+  label.innerHTML = `Ending Year: ${year}`;
+}
+
 // function for event listener for slider bar
 function handleSliderChange(event) {
   const { target } = event;
   const { value } = target;
   // set label
   setInputLabel(value);
+  startYear = value;
+  setEndingInputBounds(parseInt(startYear) + 1, endingYear);
   // build the chart again based on selectors
-  buildLineGraph(chartData, value, currentYear);
+  buildLineGraph(chartData, startYear, endingYear);
+  buildBarChart(chartData, startYear, endingYear);
+}
+
+function handleEndingSliderChange(event) {
+  const { target } = event;
+  const { value } = target;
+  // set label
+  setEndingInputLabel(value);
+  endingYear = value;
+  setInputBounds(startYear, endingYear - 1);
+  console.log(endingYear, "endingYear");
+    // build the chart again based on selectors
+  buildLineGraph(chartData, startYear, endingYear);
+  buildBarChart(chartData, startYear, endingYear);
 }
 
 // build line graph
-function buildLineGraph(data, startYear, currentYear) {
+function buildLineGraph(data, startYear, endingYear) {
   // Filter data to include only the last 50 years
   const filteredData = data.filter((landing) => {
-    return landing.year >= startYear && landing.year <= currentYear;
+    return landing.year >= startYear && landing.year <= endingYear;
   });
 
   // Separate the data by hemisphere
@@ -151,59 +173,66 @@ function setInputYear(min, max) {
 }
 
 // function for label for slider bar
-function setInputYear(year) {
-    const label = document.querySelector("#starting-label");
-    label.innerHTML = `Starting Year: ${year}`;
+function setInputLabel(year) {
+  const label = document.querySelector("#starting-label");
+  label.innerHTML = `Starting Year: ${year}`;
 }
 
-// function setYearInput(yearInput) {
-//   const selectedYear = document.querySelector("#choose-year").addEventListener("change", handleYearSelectionChange);
-// }
+function setYearInput(yearInput) {
+  const selectedYear = document
+    .querySelector("#choose-year")
+    .addEventListener("change", handleYearSelectionChange);
+}
 
-// // function for event listener for slider bar
-// function handleYearSelectionChange(event) {
-//     const { target } = event;
-//     const { value } = target;
-//     // set label
-//     setInputYear(value);
-//     // build the chart again based on selectors
-//     buildBarChart(chartData, value, currentYear);
-//   }
+// function for event listener for slider bar
+function handleYearSelectionChange(event) {
+  const { target } = event;
+  const { value } = target;
+  // set label
+  setInputYear(value);
+  // build the chart again based on selectors
+  buildBarChart(chartData, value, endingYear);
+}
 
-// create bar graph of mass
-// function buildBarChart(data) {
-//   //sort by highest mass
-//   const sortedByMass = data.sort((a, b) => {
-//     const massA = a.mass;
-//     const massB = b.mass;
-//     return massB - massA;
-//   });
-//   const topTenByMass = sortedByMass.slice(0, 10);
+// create bar graph of top mass from selected year
+function buildBarChart(data, startYear, endingYear) {
+  //sort by highest mass
+  const sortedByMass = data.sort((a, b) => {
+    const massA = a.mass;
+    const massB = b.mass;
+    return massB - massA;
+  });
+  // filter by year selected
+  const filteredByYear = sortedByMass.filter(
+    ({ year }) => year >= startYear && year <= endingYear
+  );
+  //just take the top 10
+  const topTenByMass = filteredByYear.slice(0, 10);
 
-//   // set up layout and data for bar chart
-//   const barData = [
-//     {
-//       x: topTenByMass.map((landing) => {
-//         return landing.name;
-//       }),
-//       y: topTenByMass.map((landing) => {
-//         return landing.mass;
-//       }),
-//       type: "bar",
-//       marker: {
-//         color: "skyblue",
-//       },
-//     },
-//   ];
-//   const layout = {
-//     title: "Top Ten Mass",
-//     xaxis: {
-//       title: "Name",
-//     },
-//     yaxis: {
-//       title: "Mass in Grams",
-//     },
-//   };
+  // set up layout and data for bar chart
+  const barData = [
+    {
+      x: topTenByMass.map((landing) => {
+        return landing.name;
+      }),
+      y: topTenByMass.map((landing) => {
+        return landing.mass;
+      }),
+      type: "bar",
+      marker: {
+        color: "skyblue",
+      },
+    },
+  ];
+  const layout = {
+    title: "Top Ten by Mass",
+    xaxis: {
+      title: "Meteorite Name",
+    },
+    yaxis: {
+      title: "Mass in Grams",
+    },
+  };
 
-//   Plotly.newPlot("bar-graph", barData, layout);
-// }
+  Plotly.newPlot("bar-graph", barData, layout);
+}
