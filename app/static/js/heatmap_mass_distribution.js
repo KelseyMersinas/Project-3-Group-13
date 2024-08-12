@@ -37,7 +37,11 @@ function createMap(data) {
   
     if (clickedMeteorite) {
       console.log(clickedMeteorite);
-      let popupContent = `<h3>${clickedMeteorite.name}</h3><hr><p>${clickedMeteorite.year}</p><p>${clickedMeteorite.mass}</p>`;
+      let popupContent = `<h3>Name: ${clickedMeteorite.name}</h3>
+      <hr>
+      <p>Year: ${clickedMeteorite.year}</p>
+      <p>Class: ${clickedMeteorite.recclass}</p>
+      <p>Mass: ${clickedMeteorite.mass}</p>`;
       L.popup()
         .setLatLng(clickedLatLng)
         .setContent(popupContent)
@@ -61,7 +65,7 @@ function createMap(data) {
 
  legend.onAdd = function (map) {
     let div = L.DomUtil.create("div", "info legend");
-    div.innerHTML = "<b>Information</b><br/>Click on a landing to see the name, year, and mass.<br/> A higher concentration of red indicates a higher amount of mass from meteorite landings in that area.<br/>Individual landings with darker centers have a higher mass"
+    div.innerHTML = "<b>Information</b><br/>Click on a landing to see the name, year, recclass, and mass.<br/> A higher concentration of red indicates a higher amount of mass from meteorite landings in that area.<br/>Individual landings with darker centers have a higher mass"
     return div;
 }
 legend.addTo(myMap);
