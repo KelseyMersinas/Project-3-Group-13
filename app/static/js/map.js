@@ -1,98 +1,98 @@
-// GOAL 1
-// Can I render a basic base map? - Set up Leaflet correctly
-// Can we fetch the data that we need to plot?
+// Store our API endpoint as queryUrl.
+let queryUrl = "api/v1/map";
 
+// Perform a GET request to the query URL/
+d3.json(queryUrl)
+  .then(data => {
+    console.log(data);
+    createMap(data);
+})
+.catch(error => {
+  console.error('There was a problem with your fetch operation', error);
+});
 
+// Get the basic map
 function createMap(data) {
-    // STEP 1: Init the Base Layers
-  
-    // Define variables for our tile layers.
-    let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    })
-  
-    let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+  let myMap = L.map('map').setView([45.0, -90.0], 6);
+  let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(myMap);
+
+  let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+  });
+
+  let baseMaps = {
+    "Street Map": street,
+    "Topographic Map": topo
+  };
+
+  // Handle map click event to show meteorite information
+  myMap.on('click', function(e) {
+    let clickedLatLng = e.latlng;
+    let clickedMeteorite = data.find(d => {
+      let meteoriteLatLng = L.latLng(d.lat, d.long);
+      return clickedLatLng.distanceTo(meteoriteLatLng) < 10000; // Adjust the distance threshold as needed
     });
   
-    // Step 2: Create the Overlay layers
-    let markers = L.markerClusterGroup();
-    let heatArray = [];
-  
-    for (let i = 0; i < data.length; i++){
-      let row = data[i];
-      let latitude = row.latitude;
-      let longitude = row.longitude;
-  
-      // extract coord
-      let point = [latitude, longitude];
-  
-      // make marker
-      let marker = L.marker(point);
-      let popup = `<h1>${row.full_name}</h1><hr><h2>${row.region}</h2><hr><h3>${row.launch_attempts} | ${row.launch_successes}</h3>`;
-      marker.bindPopup(popup);
-      markers.addLayer(marker);
-  
-      // add to heatmap
-    //  heatArray.push(point);
+    if (clickedMeteorite) {
+      console.log(clickedMeteorite);
+      let popupContent = `<h3>${clickedMeteorite.name}</h3><hr><p>${clickedMeteorite.year}</p><p>${clickedMeteorite.mass}</p>`;
+      L.popup()
+        .setLatLng(clickedLatLng)
+        .setContent(popupContent)
+        .openOn(myMap);
     }
-  
-    // create layer
-  //  let heatLayer = L.heatLayer(heatArray, {
-  //    radius: 25,
-   //   blur: 20
-   // });
-  
-    // Step 3: BUILD the Layer Controls
-  
-    // Only one base layer can be shown at a time.
-    let baseLayers = {
-      "Street": street,
-      "Topography": topo
-    };
-  
-    let overlayLayers = {
-      Markers: markers,
-     // Heatmap: heatLayer
-    }
-  
-    // Step 4: INIT the Map
-  
-    // Destroy the old map
-     d3.select("#map-container").html("");
-  
-    // rebuild the map
-     d3.select("#map-container").html("<div id='map'></div>");
-  
-    let myMap = L.map("map", {
-      center: [40.7128, -74.0059],
-      zoom: 5,
-      layers: [street, markers]
-    });
-  
-  
-    // Step 5: Add the Layer Control filter + legends as needed
-    L.control.layers(baseLayers, overlayLayers).addTo(myMap);
-  
+  });
+
+  // Create a heatmap layer using the fetched data
+  // We got the information on the L.heatlayer plug in from the leaflet.heat demo in github.
+ 
+// Get the data with d3.
+ d3.json(queryUrl).then(function(response) {
+
+    // Create a new marker cluster group.
+  let markers = L.markerClusterGroup();
+
+    // Loop through the data.
+  for (let i = 0; i < response.length; i++){
+
+    // Set the data location property to a variable 
+    let location = response[i].location;
+
+      // Check for the location property.
+      if (location) {
+
+        // Add a new marker to the cluster group, and bind a popup.
+        markers.addLayer(L.marker([location.coordinates[1], location.coordinates[0]])
+          .bindPopup(response[i].descriptor));
   }
-  
-   function do_work() {
-     // extract user input
-     let min_launches = d3.select("#launch_filter").property("value");
-     min_launches = parseInt(min_launches);
-     let region = d3.select("#region_filter").property("value");
-  
-     // We need to make a request to the API
-     let url = `/api/v1/map`;
-  
-    // make TWO requests
-    d3.json(url).then(function (data) {
-      createMap(data);
-    });
-  }
-  
-//   // event listener for CLICK on Button
-   d3.select("#filter").on("click", do_work);
-  
-   do_work();
-  
+
+ }
+
+ 
+  // Add our marker cluster layer to the map.
+  myMap.addLayer(markers);
+
+
+});
+
+
+  // Add the heatmap layer to the map
+ // markerCluster.addTo(myMap);
+
+  L.control.layers(baseMaps, null, { "Marker Clusters": markerCluster}, {
+    collapsed: false
+  }).addTo(myMap);
+
+// Create a legend
+ let legend = L.control({position: "bottomright" });
+
+ legend.onAdd = function (map) {
+    let div = L.DomUtil.create("div", "info legend");
+    div.innerHTML = "<b>Information</b><br/>Click on a landing to see the name, year, and mass.<br/> A higher concentration of red indicates a higher amount of mass from meteorite landings in that area.<br/>Individual landings with darker centers have a higher mass"
+    return div;
+}
+legend.addTo(myMap);
+}
+
