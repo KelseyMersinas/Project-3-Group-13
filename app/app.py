@@ -92,7 +92,7 @@ def main_handler(chart_name):
 @app.route("/api/v1/mass_distribution")
 def mass_distribution_api():
     session = db_session()
-    data = session.query(MeteoriteLanding.id, MeteoriteLanding.name, MeteoriteLanding.mass, MeteoriteLanding.year, MeteoriteLanding.lat, MeteoriteLanding.long).all()
+    data = session.query(MeteoriteLanding.id, MeteoriteLanding.name, MeteoriteLanding.mass, MeteoriteLanding.year, MeteoriteLanding.lat, MeteoriteLanding.long, MeteoriteLanding.recclass).all()
     # session.remove()  # Ensure the session is removed when done
     return jsonify([{
         "id": row.id,
@@ -100,7 +100,8 @@ def mass_distribution_api():
         "mass": row.mass,
         "year": row.year,
         "lat": row.lat,
-        "long": row.long
+        "long": row.long,
+        "recclass": row.recclass
     } for row in data])
 
 @app.route("/api/v1/map")
