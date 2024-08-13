@@ -1,5 +1,5 @@
 // Store our API endpoint as queryUrl.
-let queryUrl = "api/v1/map";
+let queryUrl = "api/v1/mass_distribution";
 
 // Perform a GET request to the query URL/
 d3.json(queryUrl)
@@ -13,7 +13,7 @@ d3.json(queryUrl)
 
 // Get the basic map
 function createMap(data) {
-  let myMap = L.map('map').setView([45.0, -90.0], 6);
+  let myMap = L.map('map').setView([45.0, -90.0], 4);
   let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(myMap);
@@ -27,61 +27,52 @@ function createMap(data) {
     "Topographic Map": topo
   };
 
-  // Handle map click event to show meteorite information
-  myMap.on('click', function(e) {
-    let clickedLatLng = e.latlng;
-    let clickedMeteorite = data.find(d => {
-      let meteoriteLatLng = L.latLng(d.lat, d.long);
-      return clickedLatLng.distanceTo(meteoriteLatLng) < 10000; // Adjust the distance threshold as needed
-    });
-  
-    if (clickedMeteorite) {
-      console.log(clickedMeteorite);
-      let popupContent = `<h3>${clickedMeteorite.name}</h3><hr><p>${clickedMeteorite.year}</p><p>${clickedMeteorite.mass}</p>`;
-      L.popup()
-        .setLatLng(clickedLatLng)
-        .setContent(popupContent)
-        .openOn(myMap);
-    }
-  });
 
-  // Create a heatmap layer using the fetched data
-  // We got the information on the L.heatlayer plug in from the leaflet.heat demo in github.
- 
-// Get the data with d3.
- d3.json(queryUrl).then(function(response) {
 
-    // Create a new marker cluster group.
+
   let markers = L.markerClusterGroup();
+  let markerArray = [];
 
-    // Loop through the data.
-  for (let i = 0; i < response.length; i++){
+  for (let i = 0; i < data.length; i++) {
+    let row = data[i];
+    console.log(row.name);
+    let latitude = row.lat;
+    let longitude = row.long;
+    let point = [latitude, longitude];
 
-    // Set the data location property to a variable 
-    let location = response[i].location;
-
-      // Check for the location property.
-      if (location) {
-
-        // Add a new marker to the cluster group, and bind a popup.
-        markers.addLayer(L.marker([location.coordinates[1], location.coordinates[0]])
-          .bindPopup(response[i].descriptor));
+    let marker = L.marker(point);
+    let popup = `<h1>${row.name}</h1><hr><h2>${row.lat}, ${row.long}</h2><hr><h3>Mass: ${row.mass} lbs <h4>${row.year}</h4>`;
+    marker.bindPopup(popup);
+    markers.addLayer(marker);
+    markerArray.push(point);
   }
+  markers.addTo(myMap);
 
- }
-
- 
-  // Add our marker cluster layer to the map.
-  myMap.addLayer(markers);
-
-
-});
-
+// Handle map click event to show meteorite information
+// myMap.on('click', function(e) {
+//   let clickedLatLng = e.latlng;
+//   let clickedMeteorite = data.find(d => {
+//     let meteoriteLatLng = L.latLng(d.lat, d.long);
+//     return clickedLatLng.distanceTo(meteoriteLatLng) < 10000; // Adjust the distance threshold as needed
+//   });
+//   if (clickedMeteorite) {
+//     console.log(clickedMeteorite);
+//     let popupContent = `<h3>Name: ${clickedMeteorite.name}</h3>
+//     <hr>
+//     <p>Year: ${clickedMeteorite.year}</p>
+//     <p>Class: ${clickedMeteorite.recclass}</p>
+//     <p>Mass: ${clickedMeteorite.mass}</p>`;
+//     L.popup()
+//       .setLatLng(clickedLatLng)
+//       .setContent(popupContent)
+//       .openOn(myMap);
+//   }
+// });
 
   // Add the heatmap layer to the map
  // markerCluster.addTo(myMap);
 
-  L.control.layers(baseMaps, null, { "Marker Clusters": markerCluster}, {
+  L.control.layers(baseMaps, null, { "Marker Clusters": markers}, {
     collapsed: false
   }).addTo(myMap);
 
@@ -90,7 +81,7 @@ function createMap(data) {
 
  legend.onAdd = function (map) {
     let div = L.DomUtil.create("div", "info legend");
-    div.innerHTML = "<b>Information</b><br/>Click on a landing to see the name, year, and mass.<br/> A higher concentration of red indicates a higher amount of mass from meteorite landings in that area.<br/>Individual landings with darker centers have a higher mass"
+    div.innerHTML = "<b>Information</b><br/>Click on a landing to see the Name, Location, Mass, and Year."
     return div;
 }
 legend.addTo(myMap);

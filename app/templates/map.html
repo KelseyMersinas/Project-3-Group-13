@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Heatmap</h1>
+    <h1>Marker Cluster Map</h1>
       <div id="map">
 
       </div>
@@ -9,7 +9,7 @@
 
 {% block script %}
 <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.0.3/dist/leaflet.markercluster.js"></script>
-<script type="text/javascript" src="static/js/heatmap_mass_distribution.js"></script>
+<script type="text/javascript" src="static/js/map.js"></script>
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.css">
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.Default.css">
 {% endblock %}

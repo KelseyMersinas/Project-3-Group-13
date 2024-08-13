@@ -108,10 +108,12 @@ def mass_distribution_api():
 def map_api():
     session = db_session()
     data = session.query(MeteoriteLanding.id, MeteoriteLanding.mass, MeteoriteLanding.lat, MeteoriteLanding.long).all()
-    db_session.remove()  # Ensure the session is removed when done
+    #session.remove()  # Ensure the session is removed when done
     return jsonify([{
         "id": row.id,
+        "name": row.name,
         "mass": row.mass,
+        "year": row.year,
         "lat": row.lat,
         "long": row.long
     } for row in data])
