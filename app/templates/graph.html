@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <!-- <h1>Graphs</h1> -->
 <!--Any other HTML goes here inbetween block and endblock-->
-<div class="container">
+<div class="container wrapper">
     <div class="row mb-5">
         <div class="col-md-12 p-5 text-center bg-dark">
         <h1>Meteorite Landings Over Time</h1>
@@ -10,21 +10,21 @@
     </div>
   </div>
 <div class="container">
-  <div class="row">
-    <div class="col-md-4 p-3 bg-dark">
+  <div class="row justify-content-center">
+    <div class="col-md-2 p-3 bg-dark">
       <h2 class="fs-4 text-center">Controls</h2>
       <label id="starting-label" for="year-select" class="form-label">Fetching data...</label>
       <input type="range" disabled onchange="handleSliderChange(event);" class="form-range" id="year-select">
       <label id="ending-label" for="ending-year-select" class="form-label">Fetching data...</label>
       <input type="range" disabled onchange="handleEndingSliderChange(event);" class="form-range" id="ending-year-select">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-10">
       <div id="line-graph"></div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-4 p-3 bg-dark"></div>
-    <div class="col-md-8">
+  <div class="row justify-content-center">
+    <div class="col-md-2 p-3 bg-dark"></div>
+    <div class="col-md-10">
       <div id="bar-graph"></div>
     </div>
   </div>

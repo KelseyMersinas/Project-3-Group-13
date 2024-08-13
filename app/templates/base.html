@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Project 3, Group 13</title>
+  <title>Meteorite Landings</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -27,10 +27,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
   crossorigin=""></script>
-
-  
-  <!-- Leaflet heatmap plugin-->
-   <!--<script type="text/javascript" src="static/js/leaflet-heat.js"></script>-->
   
   <!-- Marker cluster JavaScript code -->
   <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.0.3/dist/leaflet.markercluster.js"></script>
@@ -56,9 +52,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('landing') }}">Home</a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('heatmap') }}">Heat Map</a>
           </li>
